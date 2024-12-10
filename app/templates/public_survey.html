@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}{{ survey.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ survey.title }}</h2>
+<p>{{ survey.description }}</p>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.response.label }}
+        {{ form.response }}
+    </div>
+    <div>
+        {{ form.submit }}
+    </div>
+</form>
+{% endblock %}

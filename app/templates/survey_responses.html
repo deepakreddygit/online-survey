@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Responses for {{ survey.title }}{% endblock %}
+
+{% block content %}
+<h2>Responses for {{ survey.title }}</h2>
+
+<ul>
+    {% for response in responses %}
+        <li>{{ response.content }} - {{ response.timestamp }}</li>
+    {% else %}
+        <p>No responses yet.</p>
+    {% endfor %}
+</ul>
+
+<canvas id="responsesChart"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Pass responses data from Python to JavaScript safely
+    const responseLabels = JSON.parse(`{{ responses|map(attribute='timestamp')|list|tojson }}`);
+    const responseData = JSON.parse(`{{ responses|map(attribute='content')|list|tojson }}`);
+
+    const ctx = document.getElementById('responsesChart').getContext('2d');
+    const chart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: responseLabels,
+            datasets: [{
+                label: 'Responses',
+                data: responseData,
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Timestamp'
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Response Count'
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}

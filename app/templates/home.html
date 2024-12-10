@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1>Welcome to the Online Survey Platform</h1>
+<p>Create, distribute, and analyze surveys with ease!</p>
+{% if current_user.is_authenticated %}
+    <p>Welcome, {{ current_user.username }}!</p>
+{% else %}
+    <p><a href="{{ url_for('register') }}">Register</a> or <a href="{{ url_for('login') }}">Login</a> to get started.</p>
+{% endif %}
+{% endblock %}

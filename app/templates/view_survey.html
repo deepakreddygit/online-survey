@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}{{ survey.title }}{% endblock %}
+
+{% block content %}
+<h2>{{ survey.title }}</h2>
+<p>{{ survey.description }}</p>
+
+<h3>Add a Response</h3>
+<form action="" method="POST">
+    {{ form.hidden_tag() }}
+    {{ form.response.label }}<br>
+    {{ form.response(size=40) }}<br>
+    {{ form.submit(class_="btn btn-primary") }}
+</form>
+
+
+<h3>Responses</h3>
+{% if responses %}
+    <ul>
+        {% for response in responses %}
+            <li>{{ response.content }} ({{ response.timestamp }})</li>
+        {% endfor %}
+    </ul>
+
+    <canvas id="responsesChart" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Safely passing data from Flask to JavaScript
+            const responseLabels = JSON.parse('{{ responses | map(attribute="timestamp") | list | tojson | safe }}');
+            const responseCounts = Array.from({ length: responseLabels.length }, (_, i) => i + 1); // Generate Y-axis data as indices (1, 2, 3...)
+
+            const ctx = document.getElementById("responsesChart").getContext("2d");
+            new Chart(ctx, {
+                type: "bar",
+                data: {
+                    labels: responseLabels, // Timestamps on X-axis
+                    datasets: [{
+                        label: "Response Count",
+                        data: responseCounts, // Placeholder Y-axis data
+                        backgroundColor: "rgba(75, 192, 192, 0.2)", // Bar color
+                        borderColor: "rgba(75, 192, 192, 1)", // Border color
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: "Response Index" // Y-axis label
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: "Timestamp" // X-axis label
+                            }
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+{% else %}
+    <p>No responses yet.</p>
+{% endif %}
+{% endblock %}

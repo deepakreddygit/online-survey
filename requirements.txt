@@ -1,0 +1,5 @@
+Flask
+peewee
+Flask-WTF
+WTForms
+Flask-CSRF

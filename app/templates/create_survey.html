@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Create Survey{% endblock %}
+
+{% block content %}
+<h2>Create a New Survey</h2>
+<form method="POST">
+    {{ form.hidden_tag() }}
+    <div>
+        {{ form.title.label }}
+        {{ form.title }}
+    </div>
+    <div>
+        {{ form.description.label }}
+        {{ form.description }}
+    </div>
+    <div>
+        {{ form.submit }}
+    </div>
+</form>
+{% endblock %}
